@@ -13,6 +13,7 @@ function handleReady() {
     $('button').on("click", selectOperator);
     $('#equals').on("click", handleSubmit);
     $('#clear').on("click", handleClear);
+    handleData();
 }
 
 
