@@ -1,18 +1,18 @@
 $(document).ready(handleReady);
 
 let inputOperation;
-let solution;
-let plus = false;
-let minus = false;
-let multiply = false;
-let divide = false;
+let solutions;
+let plus;
+let minus;
+let multiply;
+let divide;
 
 function handleReady() {
     console.log("jquery is loaded!")
 
     $('button').on("click", selectOperator);
     $('#equals').on("click", handleSubmit);
-
+    $('#clear').on("click", handleClear);
 }
 
 
@@ -36,8 +36,8 @@ function handleSubmit() {
         data: inputOperation
     }).then((response) => {
         handleData()
-        console.log("POST was successful:", response)
-        console.log("POST was:", inputOperation)
+        // console.log("POST was successful:", response)
+        // console.log("POST was:", inputOperation)
     }).catch((error) => {
         // console.log('error caught', error)
         // alert('ERRORRRRR')
@@ -51,16 +51,16 @@ function selectOperator() {
         $(this).addClass('selectedOperation')
         $('.operationOff').attr('disabled', true)
         if ($(this).hasClass('plus')) {
-            plus = true;
+            plus = '+';
         }
         if ($(this).hasClass('minus')) {
-            minus = true;
+            minus = '-';
         }
         if ($(this).hasClass('multiply')) {
-            multiply = true;
+            multiply = '*';
         }
         if ($(this).hasClass('divide')) {
-            divide = true;
+            divide = '/';
         }
     }
 
@@ -68,10 +68,10 @@ function selectOperator() {
         $(this).removeClass('selectedOperation')
         $(this).addClass('operationOff')
         $('.operationOff').attr('disabled', false)
-        plus = false;
-        minus = false;
-        multiply = false;
-        divide = false;
+        plus = '';
+        minus = '';
+        multiply = '';
+        divide = '';
     }
     // console.log(plus, minus, multiply, divide);
 }
@@ -81,9 +81,9 @@ function handleData() {
         method: "GET",
         url: '/solution',
     }).then((response) => {
-        solution = response
-        console.log("GET was successful:", solution)
-        render()
+        solutions = response
+        // console.log("GET was successful:", solutions)
+        render(solutions)
     }).catch((error) => {
         // console.log('error caught', error)
         // alert('ERRORRRRR')
@@ -91,6 +91,19 @@ function handleData() {
 }
 
 
-function render() {
-    $('#solution').text(`${solution}`)
+function render(data) {
+    console.log(data);
+    let currentOperation = data[0].solution;
+    $('#solution').text(`${currentOperation}`)
+    $('#operations').empty()
+    for (let each of data) {
+    $('#operations').append(`<div>
+    ${each.input1} ${each.operation} ${each.input2} = ${each.solution}
+    </div>`)}
+    
+}
+
+let handleClear = () => {
+    let input1 = $('#input1').val('');
+    let input2 = $('#input2').val('');
 }
